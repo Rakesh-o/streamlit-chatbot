@@ -3,4 +3,4 @@ SpeechRecognition
 openai
 google-generativeai
 gtts
-
+PyAudio
