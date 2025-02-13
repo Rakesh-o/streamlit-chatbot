@@ -2,7 +2,7 @@ import google.generativeai as genai
 import json
 
 # Load the JSON dataset
-with open(r"C:\Users\rakes\Downloads\archive\intents.json", "r", encoding="utf-8") as file:
+with open("intents.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Configure Gemini API
