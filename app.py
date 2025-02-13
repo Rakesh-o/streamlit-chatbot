@@ -1,7 +1,8 @@
 from gtts import gTTS
 import streamlit as st
 import base64
-from chat import get_response
+import speech_recognition as sr
+from chat import get_response  # Ensure chat.py is correct!
 
 # Initialize session state for chat history
 if "history" not in st.session_state:
@@ -24,6 +25,10 @@ def recognize_speech():
 
 # Function for text-to-speech (TTS)
 def speak(text):
+    if not text.strip():  # Prevent empty speech
+        st.warning("No text to convert to speech.")
+        return
+    
     tts = gTTS(text=text, lang="en")
     tts.save("output.mp3")
 
@@ -58,22 +63,42 @@ new_query = st.text_input("Ask something:", key="input")
 # Buttons
 col1, col2, col3 = st.columns([1, 1, 1])
 
+# Button to send text input
 with col1:
     if st.button("📩 Send", key="send"):
-        if new_query:
+        if new_query.strip():  # Ensure input is not empty
             response = get_response(new_query)
-            st.session_state.history.append((new_query, response))
-            st.rerun()  # Refresh UI
+            if response:
+                st.session_state.history.append((new_query, response))
+                print(f"User: {new_query}, Bot: {response}")  # Debugging
+                st.rerun()
+            else:
+                st.warning("No response received from chatbot.")
+        else:
+            st.warning("Please enter a valid query.")
 
+# Button for voice input
 with col2:
     if st.button("🎤 Speak", key="voice"):
-        new_query = recognize_speech()
-        if new_query:
-            response = get_response(new_query)
-            st.session_state.history.append((new_query, response))
-            st.rerun()  # Refresh UI
+        spoken_query = recognize_speech()
+        if spoken_query.strip():  # Ensure input is valid
+            response = get_response(spoken_query)
+            if response:
+                st.session_state.history.append((spoken_query, response))
+                print(f"User: {spoken_query}, Bot: {response}")  # Debugging
+                st.rerun()
+            else:
+                st.warning("No response received from chatbot.")
+        else:
+            st.warning("Could not recognize speech.")
 
+# Button to speak the last response
 with col3:
     if st.button("🔊 Speak Response", key="speak"):
         if st.session_state.history:
             speak(st.session_state.history[-1][1])
+        else:
+            st.warning("No response to speak.")
+
+# Debugging: Show chat history in UI
+st.write("Chat History:", st.session_state.history)
