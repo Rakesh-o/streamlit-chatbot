@@ -3,3 +3,5 @@ pyttsx3
 SpeechRecognition
 openai
 google-generativeai
+gtts
+

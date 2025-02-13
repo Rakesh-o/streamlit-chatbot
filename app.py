@@ -1,6 +1,6 @@
+from gtts import gTTS
 import streamlit as st
-import speech_recognition as sr
-import pyttsx3
+import base64
 from chat import get_response
 
 # Initialize session state for chat history
@@ -24,10 +24,14 @@ def recognize_speech():
 
 # Function for text-to-speech (TTS)
 def speak(text):
-    engine = gTTs.init()
-    engine.setProperty("rate", 150)
-    engine.say(text)
-    engine.runAndWait()
+    tts = gTTS(text=text, lang="en")
+    tts.save("output.mp3")
+
+    # Convert to base64 for Streamlit playback
+    with open("output.mp3", "rb") as file:
+        audio_bytes = file.read()
+    
+    st.audio(audio_bytes, format="audio/mp3")
 
 # Set page layout
 st.set_page_config(layout="wide")
