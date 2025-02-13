@@ -1,4 +1,3 @@
-pip install --upgrade pip
 apt-get install -y portaudio19-dev
 streamlit
 SpeechRecognition
