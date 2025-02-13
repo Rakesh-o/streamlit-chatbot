@@ -24,7 +24,7 @@ def recognize_speech():
 
 # Function for text-to-speech (TTS)
 def speak(text):
-    engine = pyttsx3.init()
+    engine = gTTs.init()
     engine.setProperty("rate", 150)
     engine.say(text)
     engine.runAndWait()
